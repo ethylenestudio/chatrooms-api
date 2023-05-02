@@ -1,25 +1,25 @@
 import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export class CreateOrganizationDto {
-  @IsString()
-  @IsNotEmpty()
-  name: string;
+    @IsString()
+    @IsNotEmpty()
+    name: string;
 
-  managerId?: number;
+    managerId?: number;
 }
 
 export class UpdateOrganizationDto {
-  @IsNumber()
-  @IsNotEmpty()
-  id?: number;
+    @IsNumber()
+    @IsNotEmpty()
+    id?: number;
 
-  @IsString()
-  @IsNotEmpty()
-  newName: string;
+    @IsString()
+    @IsNotEmpty()
+    newName: string;
 }
 
 export class FindOrganizationDto {
-  page?: number;
+    page?: number;
 
-  search?: string;
+    search?: string;
 }

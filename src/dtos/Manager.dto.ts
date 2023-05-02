@@ -1,25 +1,25 @@
 import { IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateManagerDto {
-  @IsString()
-  @IsNotEmpty()
-  address: string;
+    @IsString()
+    @IsNotEmpty()
+    address: string;
 
-  organizationId: number;
+    organizationId: number;
 }
 
 export class FindManagerDto {
-  page?: number;
+    page?: number;
 
-  search?: string;
+    search?: string;
 
-  organizationId?: number;
+    organizationId?: number;
 }
 
 export class FindByOrganizationDto {
-  page?: number;
+    page?: number;
 
-  search?: string;
+    search?: string;
 
-  organizationId: number;
+    organizationId: number;
 }

@@ -1,37 +1,37 @@
 import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export class CreateSessionDto {
-  @IsString()
-  @IsNotEmpty()
-  name: string;
+    @IsString()
+    @IsNotEmpty()
+    name: string;
 
-  creatorId?: number;
+    creatorId?: number;
 
-  @IsNumber()
-  @IsNotEmpty()
-  organizationId: number;
+    @IsNumber()
+    @IsNotEmpty()
+    organizationId: number;
 }
 
 export class UpdateSessionDto {
-  @IsNumber()
-  @IsNotEmpty()
-  id: number;
+    @IsNumber()
+    @IsNotEmpty()
+    id: number;
 
-  @IsString()
-  @IsNotEmpty()
-  newName: string;
+    @IsString()
+    @IsNotEmpty()
+    newName: string;
 }
 
 export class FindSessionDto {
-  page?: number;
+    page?: number;
 
-  search?: string;
+    search?: string;
 }
 
 export class FindSessionByOrganizationDto {
-  page?: number;
+    page?: number;
 
-  search?: string;
+    search?: string;
 
-  organizationId: number;
+    organizationId: number;
 }

@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ItemPerPage } from 'config';
 import {
   CreateSessionDto,
+  FindSessionByOrganizationDto,
   FindSessionDto,
   UpdateSessionDto,
 } from 'src/dtos/Session.dto';
@@ -29,11 +30,33 @@ export class SessionService {
     return await this.sessionRepository.findOneBy({ name });
   }
 
-  async findByOrganization(id: number): Promise<Session[]> {
-    if (!isNumeric(String(id))) {
+  async findByOrganization(
+    params: FindSessionByOrganizationDto,
+  ): Promise<Session[]> {
+    if (!isNumeric(String(params.organizationId))) {
       BadRequest('Id should be a valid numeric value.');
     }
-    return await this.sessionRepository.findBy({ organization_id: id });
+    let query = this.sessionRepository
+      .createQueryBuilder('session')
+      .where(`session.organization_id = :id`, { id: params.organizationId })
+      .orderBy('session.id', 'DESC')
+      .take(ItemPerPage.Session)
+      .skip(ItemPerPage.Session * params.page || 0)
+      .getMany();
+
+    if (params.search != null) {
+      query = this.sessionRepository
+        .createQueryBuilder('session')
+        .where(`LOWER(session.name) LIKE '%${params.search.toLowerCase()}%'`)
+        .andWhere(`session.organization_id = :id`, {
+          id: params.organizationId,
+        })
+        .orderBy('session.id', 'DESC')
+        .take(ItemPerPage.Session)
+        .skip(ItemPerPage.Session * params.page || 0)
+        .getMany();
+    }
+    return await query;
   }
 
   async find(params: FindSessionDto): Promise<Session[]> {

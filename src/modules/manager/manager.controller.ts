@@ -1,6 +1,10 @@
 import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { ManagerService } from './manager.service';
-import { CreateManagerDto, FindManagerDto } from 'src/dtos/Manager.dto';
+import {
+  CreateManagerDto,
+  FindByOrganizationDto,
+  FindManagerDto,
+} from 'src/dtos/Manager.dto';
 import { Manager } from 'src/entities/Manager.entity';
 
 @Controller('manager')
@@ -12,9 +16,11 @@ export class ManagerController {
     return await this.managerService.find(params);
   }
 
-  @Get('findByOrganization/:id')
-  async byOrganization(@Param('id') id: string): Promise<Manager[]> {
-    return await this.managerService.findByOrganization(id);
+  @Get('findByOrganization')
+  async byOrganization(
+    @Query() params: FindByOrganizationDto,
+  ): Promise<Manager[]> {
+    return await this.managerService.findByOrganization(params);
   }
 
   @Get('findById/:id')

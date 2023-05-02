@@ -15,3 +15,11 @@ export class FindManagerDto {
 
   organizationId?: number;
 }
+
+export class FindByOrganizationDto {
+  page?: number;
+
+  search?: string;
+
+  organizationId: number;
+}

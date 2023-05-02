@@ -27,3 +27,11 @@ export class FindSessionDto {
 
   search?: string;
 }
+
+export class FindSessionByOrganizationDto {
+  page?: number;
+
+  search?: string;
+
+  organizationId: number;
+}

@@ -33,10 +33,7 @@ export class KeyService {
     const keyEntity = await this.keyRepository.findOneBy({ key });
     if (!keyEntity) return { render: false, mint: false };
     const keyTimestamp = new Date(keyEntity['created_at']).getTime() / 1000;
-    console.log(keyEntity['created_at']);
-    console.log(new Date().getTime());
     const currentTime = new Date().getTime() / 1000;
-    console.log(currentTime - keyTimestamp);
     const render = currentTime - keyTimestamp < ExpiryTime.Render;
     const mint = currentTime - keyTimestamp < ExpiryTime.Mint;
     return { render, mint };

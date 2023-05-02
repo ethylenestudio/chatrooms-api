@@ -2,6 +2,7 @@ import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { SessionService } from './session.service';
 import {
   CreateSessionDto,
+  FindSessionByOrganizationDto,
   FindSessionDto,
   UpdateSessionDto,
 } from 'src/dtos/Session.dto';
@@ -26,11 +27,12 @@ export class SessionController {
     return await this.sessionService.findByName(name);
   }
 
-  @Get('findByOrganization/:id')
-  async byOrganization(@Param("id") id:number) : Promise<Session[]> {
-    return await this.sessionService.findByOrganization(id)
+  @Get('findByOrganization')
+  async byOrganization(
+    @Query() params: FindSessionByOrganizationDto,
+  ): Promise<Session[]> {
+    return await this.sessionService.findByOrganization(params);
   }
-
 
   @Post('create')
   async create(@Body() sessionDetails: CreateSessionDto): Promise<Session> {

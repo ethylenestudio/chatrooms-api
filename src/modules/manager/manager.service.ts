@@ -1,7 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ItemPerPage } from 'config';
-import { CreateManagerDto, FindManagerDto } from 'src/dtos/Manager.dto';
+import {
+  CreateManagerDto,
+  FindByOrganizationDto,
+  FindManagerDto,
+} from 'src/dtos/Manager.dto';
 import { Manager } from 'src/entities/Manager.entity';
 import { BadRequest } from 'src/errors/errors';
 import { isNumeric } from 'src/helpers/isNumeric';
@@ -28,12 +32,32 @@ export class ManagerService {
     });
   }
 
-  async findByOrganization(id: string): Promise<Manager[]> {
-    if (!isNumeric(id)) {
+  async findByOrganization(params: FindByOrganizationDto): Promise<Manager[]> {
+    if (!isNumeric(params.organizationId.toString())) {
       BadRequest('Id should be a valid numeric value.');
     }
+    let query = this.managerRepository
+      .createQueryBuilder('manager')
+      .where(`manager.organization_id = :id`, { id: params.organizationId })
+      .orderBy('manager.id', 'DESC')
+      .take(ItemPerPage.Manager)
+      .skip(ItemPerPage.Manager * params.page || 0)
+      .getMany();
 
-    return await this.managerRepository.findBy({ organization_id: Number(id) });
+    if (params.search != null) {
+      query = this.managerRepository
+        .createQueryBuilder('manager')
+        .where(`LOWER(manager.address) LIKE '%${params.search.toLowerCase()}%'`)
+        .andWhere(`manager.organization_id = :id`, {
+          id: params.organizationId,
+        })
+        .orderBy('manager.id', 'DESC')
+        .take(ItemPerPage.Manager)
+        .skip(ItemPerPage.Manager * params.page || 0)
+        .getMany();
+    }
+
+    return await query;
   }
 
   async find(params: FindManagerDto): Promise<Manager[]> {

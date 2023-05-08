@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateOrganizationDto {
     @IsString()
@@ -9,13 +9,12 @@ export class CreateOrganizationDto {
 }
 
 export class UpdateOrganizationDto {
-    @IsNumber()
     @IsNotEmpty()
-    id?: number;
+    id: number;
 
-    @IsString()
-    @IsNotEmpty()
-    newName: string;
+    newName?: string;
+
+    newManager?: number;
 }
 
 export class FindOrganizationDto {

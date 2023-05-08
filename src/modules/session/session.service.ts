@@ -7,6 +7,7 @@ import {
     FindSessionDto,
     UpdateSessionDto,
 } from 'src/dtos/Session.dto';
+import { Organization } from 'src/entities/Organization.entity';
 import { Session } from 'src/entities/Session.entity';
 import { BadRequest } from 'src/errors/errors';
 import { isNumeric } from 'src/helpers/isNumeric';

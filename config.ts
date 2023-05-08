@@ -10,24 +10,26 @@ config();
 export const AppPort = 8000;
 
 export const DatabaseConfig: TypeOrmModuleOptions = {
-  type: 'postgres',
-  host: process.env.DATABASE_HOST,
-  port: 5432, //3306 for sql 5432 for postgres
-  username: process.env.DATABASE_USER,
-  password: process.env.DATABASE_PW,
-  database: process.env.DATABASE_NAME,
-  entities: [Manager, Organization, Key, Session],
-  synchronize: true,
-  autoLoadEntities: true,
+    type: 'postgres',
+    host: process.env.DATABASE_HOST,
+    port: 5432, //3306 for sql 5432 for postgres
+    username: process.env.DATABASE_USER,
+    password: process.env.DATABASE_PW,
+    database: process.env.DATABASE_NAME,
+    entities: [Manager, Organization, Key, Session],
+    synchronize: true,
+    autoLoadEntities: true,
 };
 
 export const ItemPerPage = {
-  Organization: 10,
-  Session: 10,
-  Manager: 10,
+    Organization: 7,
+    Session: 7,
+    Manager: 7,
 };
 
 export const ExpiryTime = {
-  Render: 25,
-  Mint: 300,
+    Render: 25,
+    Mint: 300,
 };
+
+export const verificationMessage = 'Signing to access chatrooms admin panel';

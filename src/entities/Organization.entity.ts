@@ -4,8 +4,10 @@ import {
     PrimaryGeneratedColumn,
     JoinColumn,
     OneToOne,
+    OneToMany,
 } from 'typeorm';
 import { Manager } from './Manager.entity';
+import { Session } from './Session.entity';
 
 @Entity('organizations')
 export class Organization {
@@ -16,7 +18,7 @@ export class Organization {
     name: string;
 
     @Column({ nullable: true })
-    manager_id: number;
+    manager_id?: number;
 
     @OneToOne(() => Manager, (manager) => manager.id, {
         nullable: true,
@@ -24,4 +26,7 @@ export class Organization {
     })
     @JoinColumn({ name: 'manager_id' })
     manager: Manager;
+
+    @OneToMany(() => Session, (session) => session.organization)
+    sessions: Organization[];
 }

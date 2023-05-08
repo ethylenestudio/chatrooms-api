@@ -9,7 +9,7 @@ import {
 import { Organization } from 'src/entities/Organization.entity';
 import { BadRequest } from 'src/errors/errors';
 import { isNumeric } from 'src/helpers/isNumeric';
-import { Repository } from 'typeorm';
+import { FindOptionsUtils, Repository } from 'typeorm';
 
 @Injectable()
 export class OrganizationService {
@@ -73,7 +73,7 @@ export class OrganizationService {
     async updateOrganization(
         data: UpdateOrganizationDto,
     ): Promise<Organization> {
-        const { newName, id } = data;
+        const { newName, id, newManager } = data;
 
         const isExist = await this.organizationRepository.findOneBy({
             id,
@@ -83,7 +83,10 @@ export class OrganizationService {
             BadRequest('Organization does not exists.');
         }
 
-        await this.organizationRepository.update({ id }, { name: newName });
+        await this.organizationRepository.update(
+            { id },
+            { name: newName, manager_id: newManager },
+        );
         const newEntity = await this.organizationRepository.findOneBy({
             id,
         });

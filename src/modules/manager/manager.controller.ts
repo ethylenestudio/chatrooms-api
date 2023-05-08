@@ -40,4 +40,9 @@ export class ManagerController {
         );
         return newManager;
     }
+
+    @Post('delete')
+    async delete(@Body('managerId') managerId: number) {
+        return await this.managerService.deleteManager(managerId);
+    }
 }

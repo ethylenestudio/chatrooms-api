@@ -7,7 +7,6 @@ export class CreateSessionDto {
 
     creatorId?: number;
 
-    @IsNumber()
     @IsNotEmpty()
     organizationId: number;
 }

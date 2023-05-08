@@ -134,4 +134,8 @@ export class ManagerService {
 
         return await this.managerRepository.save(newManager);
     }
+
+    async deleteManager(managerId: number) {
+        return await this.managerRepository.delete({ id: managerId });
+    }
 }

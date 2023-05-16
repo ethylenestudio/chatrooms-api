@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import {
+    Body,
+    Controller,
+    Get,
+    Headers,
+    Param,
+    Post,
+    Query,
+} from '@nestjs/common';
 import { SessionService } from './session.service';
 import {
     CreateSessionDto,
@@ -7,6 +15,7 @@ import {
     UpdateSessionDto,
 } from 'src/dtos/Session.dto';
 import { Session } from 'src/entities/Session.entity';
+import { BadRequest } from 'src/errors/errors';
 
 @Controller('session')
 export class SessionController {
@@ -34,9 +43,31 @@ export class SessionController {
         return await this.sessionService.findByOrganization(params);
     }
 
+    @Get('findBySignature')
+    async bySignature(
+        @Headers() headers,
+        @Query() params: FindSessionDto,
+    ): Promise<Session[]> {
+        const { authorization } = headers;
+        if (!authorization) {
+            BadRequest('No signature provided!');
+        }
+        const signature = authorization;
+        return await this.sessionService.findBySignature(signature, params);
+    }
+
     @Post('create')
-    async create(@Body() sessionDetails: CreateSessionDto): Promise<Session> {
+    async create(
+        @Headers() headers,
+        @Body() sessionDetails: CreateSessionDto,
+    ): Promise<Session> {
+        const { authorization } = headers;
+        if (!authorization) {
+            BadRequest('No signature provided!');
+        }
+        const signature = authorization;
         const newSession = await this.sessionService.createSession(
+            signature,
             sessionDetails,
         );
         return newSession;

@@ -21,4 +21,6 @@ export class FindOrganizationDto {
     page?: number;
 
     search?: string;
+
+    noPaginated?: boolean;
 }

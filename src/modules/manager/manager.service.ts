@@ -1,13 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ItemPerPage } from 'config';
+import { ItemPerPage, verificationMessage } from 'config';
+import { ethers } from 'ethers';
 import {
     CreateManagerDto,
     FindByOrganizationDto,
     FindManagerDto,
 } from 'src/dtos/Manager.dto';
 import { Manager } from 'src/entities/Manager.entity';
-import { BadRequest } from 'src/errors/errors';
+import { BadRequest, UnAuthorized } from 'src/errors/errors';
 import { isNumeric } from 'src/helpers/isNumeric';
 import { Repository } from 'typeorm';
 
@@ -116,26 +117,135 @@ export class ManagerService {
         return await query;
     }
 
-    async createManager(data: CreateManagerDto): Promise<Manager> {
-        const { address, organizationId } = data;
+    async createManager(
+        signature: string,
+        data: CreateManagerDto,
+    ): Promise<Manager> {
+        try {
+            const { address, organizationId } = data;
 
-        const isExist = await this.managerRepository.findOneBy({
-            address,
-        });
+            const verification = ethers.utils.verifyMessage(
+                verificationMessage,
+                signature,
+            );
+            const manager = await this.managerRepository.findOne({
+                where: { address: verification.toLowerCase() },
+                relations: { manages: true },
+            });
 
-        if (isExist) {
-            BadRequest('Manager address already exists.');
+            if (
+                manager.organization_id != organizationId &&
+                manager.organization_id != 0
+            ) {
+                UnAuthorized('Cant change another organizations schema!');
+            }
+
+            if (!manager) {
+                BadRequest('No manager found!');
+            }
+
+            const isExist = await this.managerRepository.findOneBy({
+                address,
+            });
+
+            if (isExist) {
+                BadRequest('Manager address already exists.');
+            }
+
+            const newManager = this.managerRepository.create({
+                address: address.toLowerCase(),
+                organization_id: organizationId,
+            });
+
+            return await this.managerRepository.save(newManager);
+        } catch (e) {
+            BadRequest(e.message);
         }
-
-        const newManager = this.managerRepository.create({
-            address,
-            organization_id: organizationId,
-        });
-
-        return await this.managerRepository.save(newManager);
+    }
+    async adminOrManager(signature: string) {
+        try {
+            const verification = ethers.utils.verifyMessage(
+                verificationMessage,
+                signature,
+            );
+            const manager = await this.managerRepository.findOne({
+                where: { address: verification.toLowerCase() },
+                relations: { manages: true },
+            });
+            if (!manager) {
+                BadRequest('No manager found!');
+            }
+            let response = { admin: false, manager: false };
+            if (manager.manages) {
+                response = { ...response, manager: true };
+            }
+            if (manager.organization_id == 0) {
+                response = { ...response, admin: true };
+            }
+            return response;
+        } catch (e) {
+            BadRequest(e.message);
+        }
+    }
+    async deleteManager(signature: string, managerId: number) {
+        try {
+            const verification = ethers.utils.verifyMessage(
+                verificationMessage,
+                signature,
+            );
+            const manager = await this.managerRepository.findOne({
+                where: { address: verification.toLowerCase() },
+                relations: { manages: true },
+            });
+            if (!manager) {
+                BadRequest('No manager found!');
+            }
+            if (manager.manages) {
+                return await this.managerRepository.delete({
+                    id: managerId,
+                });
+            } else {
+                UnAuthorized('Unauthorized!');
+            }
+        } catch (e) {
+            BadRequest(e.message);
+        }
     }
 
-    async deleteManager(managerId: number) {
-        return await this.managerRepository.delete({ id: managerId });
+    async findBySignature(signature: string, organizationId: string) {
+        try {
+            const verification = ethers.utils.verifyMessage(
+                verificationMessage,
+                signature,
+            );
+            const manager = await this.managerRepository.findOne({
+                where: { address: verification.toLowerCase() },
+                relations: { manages: true },
+            });
+            if (!manager) {
+                BadRequest('No manager found!');
+            }
+            if (
+                manager.organization_id != Number(organizationId) &&
+                manager.organization_id != 0
+            ) {
+                UnAuthorized('Unauthorized');
+            }
+            const managers = await this.managerRepository.find({
+                where: {
+                    organization_id: Number(organizationId),
+                },
+                relations: {
+                    manages: true,
+                },
+                order: {
+                    managed_organization: 'ASC',
+                    id: 'DESC',
+                },
+            });
+            return managers;
+        } catch (e) {
+            BadRequest(e.message);
+        }
     }
 }

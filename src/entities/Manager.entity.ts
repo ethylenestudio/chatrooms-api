@@ -22,6 +22,9 @@ export class Manager {
     @Column({ nullable: false })
     organization_id: number;
 
+    @Column({ nullable: true })
+    managed_organization: number;
+
     @ManyToOne(() => Organization, (organization) => organization.id, {
         onDelete: 'CASCADE',
         nullable: false,
@@ -35,5 +38,6 @@ export class Manager {
         onDelete: 'CASCADE',
         nullable: true,
     })
+    @JoinColumn({ name: 'managed_organization' })
     manages: Organization;
 }

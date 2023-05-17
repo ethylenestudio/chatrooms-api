@@ -29,33 +29,6 @@ export class OrganizationService {
         return await this.organizationRepository.findOneBy({ id: Number(id) });
     }
 
-    async findByName(name: string): Promise<Organization> {
-        return await this.organizationRepository.findOneBy({ name });
-    }
-
-    async find(params: FindOrganizationDto): Promise<Organization[]> {
-        let query = this.organizationRepository
-            .createQueryBuilder('organization')
-            .orderBy('organization.id', 'DESC')
-            .take(ItemPerPage.Organization)
-            .skip(ItemPerPage.Organization * params.page || 0)
-            .getMany();
-
-        if (params.search != null) {
-            query = this.organizationRepository
-                .createQueryBuilder('organization')
-                .where(
-                    `LOWER(organization.name) LIKE '%${params.search.toLowerCase()}%'`,
-                )
-                .orderBy('organization.id', 'DESC')
-                .take(ItemPerPage.Organization)
-                .skip(ItemPerPage.Organization * params.page || 0)
-                .getMany();
-        }
-
-        return await query;
-    }
-
     async createOrganization(
         signature: string,
         data: CreateOrganizationDto,
@@ -177,7 +150,8 @@ export class OrganizationService {
                 .skip(ItemPerPage.Organization * params.page || 0)
                 .getMany();
         }
-        if (params.noPaginated && manager.organization_id == 0) {
+
+        if (params.noPaginated == 'true' && manager.organization_id == 0) {
             query = this.organizationRepository
                 .createQueryBuilder('organization')
                 .where(

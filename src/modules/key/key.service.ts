@@ -1,5 +1,7 @@
+import { InjectQueue } from '@nestjs/bull';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Queue } from 'bull';
 import { ExpiryTime, verificationMessage } from 'config';
 import { ethers } from 'ethers';
 import { CreateKeyDto } from 'src/dtos/Key.dto';
@@ -18,6 +20,7 @@ export class KeyService {
         private readonly managerRepository: Repository<Manager>,
         @InjectRepository(Session)
         private readonly sessionRepository: Repository<Session>,
+        @InjectQueue('keyCleaner') private keyCleaner: Queue,
     ) {}
 
     async createKey(signature: string, data: CreateKeyDto): Promise<Key> {
@@ -45,9 +48,9 @@ export class KeyService {
             });
 
             const savedKey = await this.keyRepository.save(keyEntity);
-            // await this.deleteQueue.add({
-            //   timestamp: new Date().getTime() / 1000,
-            // });
+            await this.keyCleaner.add({
+                timestamp: new Date().getTime() / 1000,
+            });
 
             return savedKey;
         } else {

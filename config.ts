@@ -21,6 +21,13 @@ export const DatabaseConfig: TypeOrmModuleOptions = {
     autoLoadEntities: true,
 };
 
+export const BullConfig = {
+    redis: {
+        host: process.env.REDIS_HOST,
+        port: 6379,
+    },
+};
+
 export const ItemPerPage = {
     Organization: 7,
     Session: 7,

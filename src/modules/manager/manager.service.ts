@@ -1,12 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ItemPerPage, verificationMessage } from 'config';
+import { verificationMessage } from 'config';
 import { ethers } from 'ethers';
-import {
-    CreateManagerDto,
-    FindByOrganizationDto,
-    FindManagerDto,
-} from 'src/dtos/Manager.dto';
+import { CreateManagerDto } from 'src/dtos/Manager.dto';
 import { Manager } from 'src/entities/Manager.entity';
 import { BadRequest, UnAuthorized } from 'src/errors/errors';
 import { isNumeric } from 'src/helpers/isNumeric';
@@ -60,6 +56,11 @@ export class ManagerService {
 
             if (isExist) {
                 BadRequest('Manager address already exists.');
+            }
+
+            const isAddressValid = ethers.utils.isAddress(data.address);
+            if (!isAddressValid) {
+                BadRequest('Address is not valid!');
             }
 
             const newManager = this.managerRepository.create({

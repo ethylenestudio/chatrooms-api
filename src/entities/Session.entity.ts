@@ -20,6 +20,9 @@ export class Session {
     created_by: number;
 
     @Column()
+    context_id: string;
+
+    @Column()
     organization_id: number;
 
     @ManyToOne(() => Manager, (manager) => manager.id, {

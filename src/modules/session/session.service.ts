@@ -4,14 +4,13 @@ import { ItemPerPage, verificationMessage } from 'config';
 import { ethers } from 'ethers';
 import {
     CreateSessionDto,
-    FindSessionByOrganizationDto,
     FindSessionDto,
     UpdateSessionDto,
 } from 'src/dtos/Session.dto';
 import { Manager } from 'src/entities/Manager.entity';
 import { Session } from 'src/entities/Session.entity';
 import { BadRequest, UnAuthorized } from 'src/errors/errors';
-import { isNumeric } from 'src/helpers/isNumeric';
+import { createContext } from 'src/helpers/createContext';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -23,78 +22,12 @@ export class SessionService {
         private readonly managerRepository: Repository<Manager>,
     ) {}
 
-    async findById(id: string): Promise<Session> {
-        if (!isNumeric(id)) {
-            BadRequest('Id should be a valid numeric value.');
-        }
-        return await this.sessionRepository.findOneBy({ id: Number(id) });
-    }
-
-    async findByName(name: string): Promise<Session> {
-        return await this.sessionRepository.findOneBy({ name });
-    }
-
-    async findByOrganization(
-        params: FindSessionByOrganizationDto,
-    ): Promise<Session[]> {
-        if (!isNumeric(String(params.organizationId))) {
-            BadRequest('Id should be a valid numeric value.');
-        }
-        let query = this.sessionRepository
-            .createQueryBuilder('session')
-            .where(`session.organization_id = :id`, {
-                id: params.organizationId,
-            })
-            .orderBy('session.id', 'DESC')
-            .take(ItemPerPage.Session)
-            .skip(ItemPerPage.Session * params.page || 0)
-            .getMany();
-
-        if (params.search != null) {
-            query = this.sessionRepository
-                .createQueryBuilder('session')
-                .where(
-                    `LOWER(session.name) LIKE '%${params.search.toLowerCase()}%'`,
-                )
-                .andWhere(`session.organization_id = :id`, {
-                    id: params.organizationId,
-                })
-                .orderBy('session.id', 'DESC')
-                .take(ItemPerPage.Session)
-                .skip(ItemPerPage.Session * params.page || 0)
-                .getMany();
-        }
-        return await query;
-    }
-
-    async find(params: FindSessionDto): Promise<Session[]> {
-        let query = this.sessionRepository
-            .createQueryBuilder('session')
-            .orderBy('session.id', 'DESC')
-            .take(ItemPerPage.Session)
-            .skip(ItemPerPage.Session * params.page || 0)
-            .getMany();
-
-        if (params.search != null) {
-            query = this.sessionRepository
-                .createQueryBuilder('session')
-                .where(
-                    `LOWER(session.name) LIKE '%${params.search.toLowerCase()}%'`,
-                )
-                .orderBy('session.id', 'DESC')
-                .take(ItemPerPage.Session)
-                .skip(ItemPerPage.Session * params.page || 0)
-                .getMany();
-        }
-
-        return await query;
-    }
-
     async createSession(
         signature: string,
         data: CreateSessionDto,
     ): Promise<Session> {
         const { name, creatorId, organizationId } = data;
+
         try {
             const verification = ethers.utils.verifyMessage(
                 verificationMessage,
@@ -118,10 +51,12 @@ export class SessionService {
             ) {
                 UnAuthorized('Unauthorized!');
             }
+            const res = await createContext(name.toLowerCase());
             const newSession = this.sessionRepository.create({
                 name: name.toLowerCase(),
-                created_by: creatorId,
+                created_by: manager.id,
                 organization_id: organizationId,
+                context_id: res.doc,
             });
 
             return await this.sessionRepository.save(newSession);

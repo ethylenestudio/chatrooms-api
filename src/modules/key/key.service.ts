@@ -8,7 +8,8 @@ import { CreateKeyDto } from 'src/dtos/Key.dto';
 import { Key } from 'src/entities/Key.entity';
 import { Manager } from 'src/entities/Manager.entity';
 import { Session } from 'src/entities/Session.entity';
-import { UnAuthorized } from 'src/errors/errors';
+import { BadRequest, UnAuthorized } from 'src/errors/errors';
+import { grantAccess } from 'src/helpers/orbisFunctions';
 import { Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -65,5 +66,26 @@ export class KeyService {
         const render = currentTime - keyTimestamp < ExpiryTime.Render;
         const mint = currentTime - keyTimestamp < ExpiryTime.Mint;
         return { render, mint };
+    }
+
+    async requestAccess(signature: string, key: string) {
+        const keyEntity = await this.keyRepository.findOne({
+            where: { key },
+            relations: { session: true },
+        });
+        console.log(keyEntity);
+        const isValid = await this.isValid(key);
+        if (!isValid.mint) {
+            BadRequest('Key is expired!');
+        }
+        const verification = ethers.utils.verifyMessage(
+            verificationMessage,
+            signature,
+        );
+        return await grantAccess(
+            verification,
+            keyEntity.session.name,
+            keyEntity.session.id,
+        );
     }
 }

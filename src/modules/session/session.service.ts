@@ -10,7 +10,7 @@ import {
 import { Manager } from 'src/entities/Manager.entity';
 import { Session } from 'src/entities/Session.entity';
 import { BadRequest, UnAuthorized } from 'src/errors/errors';
-import { createContext } from 'src/helpers/createContext';
+import { createContext } from 'src/helpers/orbisFunctions';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -26,7 +26,7 @@ export class SessionService {
         signature: string,
         data: CreateSessionDto,
     ): Promise<Session> {
-        const { name, creatorId, organizationId } = data;
+        const { name, organizationId } = data;
 
         try {
             const verification = ethers.utils.verifyMessage(

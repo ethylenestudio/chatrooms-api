@@ -5,3 +5,7 @@ export class CreateKeyDto {
     @IsNotEmpty()
     sessionId: number;
 }
+
+export class AccessDto {
+    key: string;
+}

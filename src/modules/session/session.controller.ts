@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Headers, Post, Query } from '@nestjs/common';
+import {
+    Body,
+    Controller,
+    Get,
+    Headers,
+    Param,
+    Post,
+    Query,
+} from '@nestjs/common';
 import { SessionService } from './session.service';
 import { CreateSessionDto, FindSessionDto } from 'src/dtos/Session.dto';
 import { Session } from 'src/entities/Session.entity';
@@ -8,6 +16,10 @@ import { BadRequest } from 'src/errors/errors';
 export class SessionController {
     constructor(private readonly sessionService: SessionService) {}
 
+    @Get('findById/:id')
+    async byId(@Param('id') id: string) {
+        return await this.sessionService.findById(id);
+    }
     @Get('findBySignature')
     async bySignature(
         @Headers() headers,

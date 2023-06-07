@@ -22,6 +22,10 @@ export class SessionService {
         private readonly managerRepository: Repository<Manager>,
     ) {}
 
+    async findById(id: string) {
+        return await this.sessionRepository.findOneBy({ id: Number(id) });
+    }
+
     async createSession(
         signature: string,
         data: CreateSessionDto,

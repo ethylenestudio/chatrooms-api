@@ -16,8 +16,8 @@ import { BadRequest } from 'src/errors/errors';
 export class SessionController {
     constructor(private readonly sessionService: SessionService) {}
 
-    @Get('findById/:id')
-    async byId(@Param('id') id: string) {
+    @Get('findById')
+    async byId(@Query('id') id: string) {
         return await this.sessionService.findById(id);
     }
     @Get('findBySignature')

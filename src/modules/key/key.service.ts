@@ -73,7 +73,6 @@ export class KeyService {
             where: { key },
             relations: { session: true },
         });
-        console.log(keyEntity);
         const isValid = await this.isValid(key);
         if (!isValid.mint) {
             BadRequest('Key is expired!');

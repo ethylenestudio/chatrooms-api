@@ -32,7 +32,7 @@ async function grantAccess(address: string, name: string, sessionId: number) {
             name: 'Eth-Barcelona',
             type: `chatrooms-access-${sessionId}`,
             network: 'EVM',
-            protocol: 'nonces',
+            protocol: 'eth-barcelona',
             description: `Has access to ${name} chatroom.`,
         },
     };

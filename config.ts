@@ -39,4 +39,9 @@ export const ExpiryTime = {
     Mint: 300,
 };
 
+export const ORBIS_PROJECT_ID =
+    'kjzl6cwe1jw148cji7hgrna5ta4w5wyo0fpovye9m80xod0vtdbe9rbrb4xfbn8';
+export const ORBIS_ISSUER = 'eth-barcelona';
+export const ORBIS_NAME = 'Eth-Barcelona';
+export const ORBIS_CREDENTIAL = 'chatrooms';
 export const verificationMessage = 'Signing to access chatrooms admin panel';

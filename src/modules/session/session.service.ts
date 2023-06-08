@@ -55,14 +55,16 @@ export class SessionService {
             ) {
                 UnAuthorized('Unauthorized!');
             }
-            const res = await createContext(name.toLowerCase());
             const newSession = this.sessionRepository.create({
                 name: name.toLowerCase(),
                 created_by: manager.id,
                 organization_id: organizationId,
-                context_id: res.doc,
             });
-
+            const res = await createContext(
+                name.toLowerCase(),
+                String(newSession.id),
+            );
+            newSession.context_id = res.doc;
             return await this.sessionRepository.save(newSession);
         } catch (e) {
             BadRequest(e.message);

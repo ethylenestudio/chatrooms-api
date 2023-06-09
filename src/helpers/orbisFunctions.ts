@@ -16,9 +16,14 @@ async function createContext(name: string, sessionId: string) {
         project_id: ORBIS_PROJECT_ID,
         name,
         websiteUrl: 'https://ethereum.org',
-        requiredCredentials: [
+        accessRules: [
             {
-                identifier: `${ORBIS_ISSUER}-${ORBIS_CREDENTIAL}-${sessionId}`,
+                type: 'credential',
+                requiredCredentials: [
+                    {
+                        identifier: `${ORBIS_ISSUER}-${ORBIS_CREDENTIAL}-${sessionId}`,
+                    },
+                ],
             },
         ],
     });

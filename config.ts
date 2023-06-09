@@ -40,7 +40,7 @@ export const ExpiryTime = {
 };
 
 export const ORBIS_PROJECT_ID =
-    'kjzl6cwe1jw148cji7hgrna5ta4w5wyo0fpovye9m80xod0vtdbe9rbrb4xfbn8';
+    'kjzl6cwe1jw145b59614y5hw24bicmwcift03o3xn08w1lqnklzqvhplpz66grz';
 export const ORBIS_ISSUER = 'eth-barcelona';
 export const ORBIS_NAME = 'Eth-Barcelona';
 export const ORBIS_CREDENTIAL = 'chatrooms';

@@ -59,7 +59,10 @@ export class SessionService {
                 name: name.toLowerCase(),
                 created_by: manager.id,
                 organization_id: organizationId,
+                context_id: '',
             });
+
+            await this.sessionRepository.save(newSession);
             const res = await createContext(
                 name.toLowerCase(),
                 String(newSession.id),

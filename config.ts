@@ -43,5 +43,5 @@ export const ORBIS_PROJECT_ID =
     'kjzl6cwe1jw145nessm47mky8qclcfi0eh4y07892xqy5e1leeoujfd301m259x';
 export const ORBIS_ISSUER = 'eth-barcelona';
 export const ORBIS_NAME = 'Eth-Barcelona';
-export const ORBIS_CREDENTIAL = 'chatrooms';
+export const ORBIS_CREDENTIAL = 'chatrooms-beta';
 export const verificationMessage = 'Signing to access chatrooms admin panel';

@@ -8,6 +8,7 @@ import { SessionModule } from './modules/session/session.module';
 import { ManagerModule } from './modules/manager/manager.module';
 import { BullModule } from '@nestjs/bull';
 import { ProcessorModule } from './processors/processor.module';
+import { ThrottlerModule } from '@nestjs/throttler';
 @Module({
     imports: [
         ConfigModule.forRoot(),
@@ -18,6 +19,10 @@ import { ProcessorModule } from './processors/processor.module';
         SessionModule,
         ManagerModule,
         ProcessorModule,
+        ThrottlerModule.forRoot({
+            ttl: 60,
+            limit: 1000,
+        }),
     ],
     controllers: [],
     providers: [],

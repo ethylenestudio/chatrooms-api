@@ -41,7 +41,7 @@ export const ExpiryTime = {
 };
 
 export const ORBIS_PROJECT_ID =
-    'kjzl6cwe1jw14acwxvbuqtiteuvkrtnlwfd7uaoou01le75qd5kdyhqcsmxey5i';
+    'kjzl6cwe1jw14bkhjtjr7sz5gfdrjhn8ix22bwcgco5restk5rpzn172fhimwzq';
 export const ORBIS_ISSUER = 'chatrooms';
 export const ORBIS_NAME = 'Chatrooms';
 export const ORBIS_CREDENTIAL = 'access-controller';

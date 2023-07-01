@@ -41,7 +41,7 @@ export const ExpiryTime = {
 };
 
 export const ORBIS_PROJECT_ID = process.env.ORBIS_PROJECT_ID;
-export const ORBIS_ISSUER = 'chatrooms';
+export const ORBIS_ISSUER = 'eth-barcelona';
 export const ORBIS_NAME = 'Chatrooms';
 export const ORBIS_CREDENTIAL = 'access-controller';
 export const verificationMessage =

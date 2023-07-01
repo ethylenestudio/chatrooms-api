@@ -27,6 +27,7 @@ async function createContext(name: string, sessionId: string) {
             },
         ],
     });
+    console.log(res);
     return res;
 }
 
@@ -59,7 +60,8 @@ async function grantAccess(address: string, name: string, sessionId: number) {
             description: `Has access to ${name}.`,
         },
     };
-    await orbis.createTileDocument(content);
+    const res = await orbis.createTileDocument(content);
+    console.log(res);
     return true;
 }
 

@@ -1,0 +1,34 @@
+version: '3.8'
+services:
+    redis:
+        container_name: redis
+        image: bitnami/redis:latest
+        ports:
+            - 6379:6379
+        environment:
+            - ALLOW_EMPTY_PASSWORD=no
+            - REDIS_PASSWORD={REDIS-PASSWORD}
+            - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL,CONFIG
+        restart: always
+
+    chatrooms-api:
+        image: asgarovfarhad/chatrooms-api:1.0.0
+        container_name: chatrooms-api
+        build:
+            context: .
+            dockerfile: Dockerfile
+        ports:
+            - 8000:8000
+        depends_on:
+            - redis
+        environment:
+            - DATABASE_HOST={DATABASE_HOST}
+            - DATABASE_PW={DATABASE_PW}
+            - DATABASE_USER=root
+            - DATABASE_NAME=postgres
+            - REDIS_HOST=redis
+            - REDIS_PASSWORD={REDIS-PASSWORD}
+            - ORBIS_PROJECT_ID=kjzl6cwe1jw14bkhjtjr7sz5gfdrjhn8ix22bwcgco5restk5rpzn172fhimwzq
+            - ORBIS_PRIVATE=[]
+        platform: linux/amd64
+        restart: always

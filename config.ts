@@ -40,8 +40,9 @@ export const ExpiryTime = {
 };
 
 export const ORBIS_PROJECT_ID =
-    'kjzl6cwe1jw145nessm47mky8qclcfi0eh4y07892xqy5e1leeoujfd301m259x';
-export const ORBIS_ISSUER = 'eth-barcelona';
-export const ORBIS_NAME = 'Eth-Barcelona';
-export const ORBIS_CREDENTIAL = 'chatrooms-beta';
-export const verificationMessage = 'Signing to access chatrooms admin panel';
+    'kjzl6cwe1jw14acwxvbuqtiteuvkrtnlwfd7uaoou01le75qd5kdyhqcsmxey5i';
+export const ORBIS_ISSUER = 'chatrooms';
+export const ORBIS_NAME = 'Chatrooms';
+export const ORBIS_CREDENTIAL = 'access-controller';
+export const verificationMessage =
+    'Sign this message to access chatroom features';
